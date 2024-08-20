@@ -1,11 +1,13 @@
 package main
 
 import (
+	"net/http"
 	"time"
 
-	route "github.com/amitshekhariitbhu/go-backend-clean-architecture/api/route"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/bootstrap"
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
+
+	"github.com/altafino/ivisual/api/route"
+	"github.com/altafino/ivisual/bootstrap"
 )
 
 func main() {
@@ -19,9 +21,9 @@ func main() {
 
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
-	gin := gin.Default()
+	r := chi.NewRouter()
 
-	route.Setup(env, timeout, db, gin)
+	route.Setup(env, timeout, db, r)
 
-	gin.Run(env.ServerAddress)
+	http.ListenAndServe(env.ServerAddress, r)
 }

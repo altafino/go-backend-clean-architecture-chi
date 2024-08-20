@@ -1,24 +1,26 @@
 package controller
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/gin-gonic/gin"
+	"github.com/altafino/ivisual/domain"
 )
 
 type ProfileController struct {
 	ProfileUsecase domain.ProfileUsecase
 }
 
-func (pc *ProfileController) Fetch(c *gin.Context) {
-	userID := c.GetString("x-user-id")
+func (pc *ProfileController) Fetch(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value("x-user-id").(string)
 
-	profile, err := pc.ProfileUsecase.GetProfileByID(c, userID)
+	profile, err := pc.ProfileUsecase.GetProfileByID(r.Context(), userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	c.JSON(http.StatusOK, profile)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(profile)
 }

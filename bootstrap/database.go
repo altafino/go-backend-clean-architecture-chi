@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/mongo"
+	"github.com/altafino/ivisual/mongo"
 )
 
 func NewMongoDatabase(env *Env) mongo.Client {

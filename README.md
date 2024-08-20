@@ -1,8 +1,13 @@
-# Go Backend Clean Architecture
+## Credits
+This project is a fork of https://github.com/amitshekhariitbhu/go-backend-clean-architecture
+What I (https://github.com/stefanwuthrich) have done is:
+- Migrated from Gin to Chi (https://github.com/go-chi/chi). Reason: Chi is more lightweight and based on standard net/http library.
+- Updated Go modules to latest versions.
 
-A Go (Golang) Backend Clean Architecture project with Gin, MongoDB, JWT Authentication Middleware, Test, and Docker.
+# Go Backend Clean Architecture - Chi/Standard net/http
 
-![Go Backend Clean Architecture](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-backend-clean-architecture.png?raw=true)
+A Go (Golang) Backend Clean Architecture project with Chi, MongoDB, JWT Authentication Middleware, Test, and Docker.
+
 
 **You can use this project as a template to build your Backend project in the Go language on top of this project.**
 
@@ -32,9 +37,10 @@ Learn about this project architecture in detail from the blogs mentioned below:
 - Repository
 - Domain
 
-![Go Backend Clean Architecture Diagram](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-backend-arch-diagram.png?raw=true)
+![Go Backend Clean Architecture Diagram](https://github.com/altafino/ivisual/blob/main/assets/go-backend-arch-diagram.png?raw=true)
 
-## About me
+### About original author
+
 
 Hi, I am Amit Shekhar, Co-Founder @ [Outcome School](https://outcomeschool.com) • IIT 2010-14 • I have taught and mentored many developers, and their efforts landed them high-paying tech jobs, helped many tech companies in solving their unique problems, and created many open-source libraries being used by top companies. I am passionate about sharing knowledge through open-source, blogs, and videos.
 
@@ -56,7 +62,7 @@ You can connect with me on:
 
 ## Major Packages used in this project
 
-- **gin**: Gin is an HTTP web framework written in Go (Golang). It features a Martini-like API with much better performance -- up to 40 times faster. If you need a smashing performance, get yourself some Gin.
+- **chi**: Chi is an HTTP web framework written in Go (Golang) using standard library net/http. It's lightweight and fast.
 - **mongo go driver**: The Official Golang driver for MongoDB.
 - **jwt**: JSON Web Tokens are an open, industry-standard RFC 7519 method for representing claims securely between two parties. Used for Access Token and Refresh Token.
 - **viper**: For loading configuration from the `.env` file. Go configuration with fangs. Find, load, and unmarshal a configuration file in JSON, TOML, YAML, HCL, INI, envfile, or Java properties formats.
@@ -67,13 +73,13 @@ You can connect with me on:
 
 ### Public API Request Flow without JWT Authentication Middleware
 
-![Public API Request Flow](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-arch-public-api-request-flow.png?raw=true)
+![Public API Request Flow](https://github.com/altafino/ivisual/blob/main/assets/go-arch-public-api-request-flow.png?raw=true)
 
 ### Private API Request Flow with JWT Authentication Middleware
 
 > JWT Authentication Middleware for Access Token Validation.
 
-![Private API Request Flow](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-arch-private-api-request-flow.png?raw=true)
+![Private API Request Flow](https://github.com/altafino/ivisual/blob/main/assets/go-arch-private-api-request-flow.png?raw=true)
 
 ### How to run this project?
 
@@ -86,7 +92,7 @@ We can run this Go Backend Clean Architecture project with or without Docker. He
 cd your-workspace
 
 # Clone this project into your workspace
-git clone https://github.com/amitshekhariitbhu/go-backend-clean-architecture.git
+git clone https://github.com/altafino/ivisual.git
 
 # Move to the project root directory
 cd go-backend-clean-architecture
@@ -136,6 +142,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
 ├── Dockerfile
 ├── api
 │   ├── controller
+│   │   ├── error.go
 │   │   ├── login_controller.go
 │   │   ├── profile_controller.go
 │   │   ├── profile_controller_test.go
@@ -188,11 +195,14 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
     └── task_usecase_test.go
 ```
 
-### API documentation of Go Backend Clean Architecture
+### API Endpoints
 
-<a href="https://documenter.getpostman.com/view/391588/2s8Z75S9xy" target="_blank">
-    <img alt="View API Doc Button" src="https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/button-view-api-docs.png?raw=true" width="200" height="60"/>
-</a>
+- Login
+- Profile
+- Refresh Token
+- Signup
+- Task Create
+
 
 ### Example API Request and Response
 
@@ -201,7 +211,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   - Request
 
   ```
-  curl --location --request POST 'http://localhost:8080/signup' \
+  curl --location --request POST 'http://localhost:8080/public/signup' \
   --data-urlencode 'email=test@gmail.com' \
   --data-urlencode 'password=test' \
   --data-urlencode 'name=Test Name'
@@ -221,7 +231,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   - Request
 
   ```
-  curl --location --request POST 'http://localhost:8080/login' \
+  curl --location --request POST 'http://localhost:8080/public/login' \
   --data-urlencode 'email=test@gmail.com' \
   --data-urlencode 'password=test'
   ```
@@ -240,7 +250,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   - Request
 
   ```
-  curl --location --request GET 'http://localhost:8080/profile' \
+  curl --location --request GET 'http://localhost:8080/protected/profile' \
   --header 'Authorization: Bearer access_token'
   ```
 
@@ -258,7 +268,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   - Request
 
   ```
-  curl --location --request POST 'http://localhost:8080/task' \
+  curl --location --request POST 'http://localhost:8080/protected/task' \
   --header 'Authorization: Bearer access_token' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'title=Test Task'
@@ -277,7 +287,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   - Request
 
   ```
-  curl --location --request GET 'http://localhost:8080/task' \
+  curl --location --request GET 'http://localhost:8080/protected/task' \
   --header 'Authorization: Bearer access_token'
   ```
 
@@ -299,7 +309,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   - Request
 
   ```
-  curl --location --request POST 'http://localhost:8080/refresh' \
+  curl --location --request POST 'http://localhost:8080/public/refresh' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'refreshToken=refresh_token'
   ```

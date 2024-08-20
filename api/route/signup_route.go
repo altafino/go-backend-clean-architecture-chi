@@ -3,20 +3,21 @@ package route
 import (
 	"time"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/api/controller"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/bootstrap"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/mongo"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/repository"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/usecase"
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
+
+	"github.com/altafino/ivisual/api/controller"
+	"github.com/altafino/ivisual/bootstrap"
+	"github.com/altafino/ivisual/domain"
+	"github.com/altafino/ivisual/mongo"
+	"github.com/altafino/ivisual/repository"
+	"github.com/altafino/ivisual/usecase"
 )
 
-func NewSignupRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+func NewSignupRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, router chi.Router) {
 	ur := repository.NewUserRepository(db, domain.CollectionUser)
 	sc := controller.SignupController{
 		SignupUsecase: usecase.NewSignupUsecase(ur, timeout),
 		Env:           env,
 	}
-	group.POST("/signup", sc.Signup)
+	router.Post("/signup", sc.Signup)
 }

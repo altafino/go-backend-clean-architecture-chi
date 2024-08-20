@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/bootstrap"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/gin-gonic/gin"
+	"github.com/altafino/ivisual/bootstrap"
+	"github.com/altafino/ivisual/domain"
 )
 
 type LoginController struct {
@@ -15,35 +15,35 @@ type LoginController struct {
 	Env          *bootstrap.Env
 }
 
-func (lc *LoginController) Login(c *gin.Context) {
+func (lc *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 	var request domain.LoginRequest
 
-	err := c.ShouldBind(&request)
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusBadRequest)
 		return
 	}
 
-	user, err := lc.LoginUsecase.GetUserByEmail(c, request.Email)
+	user, err := lc.LoginUsecase.GetUserByEmail(r.Context(), request.Email)
 	if err != nil {
-		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with the given email"})
+		http.Error(w, jsonError("User not found with the given email"), http.StatusNotFound)
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)) != nil {
-		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid credentials"})
+		http.Error(w, jsonError("Invalid credentials"), http.StatusUnauthorized)
 		return
 	}
 
 	accessToken, err := lc.LoginUsecase.CreateAccessToken(&user, lc.Env.AccessTokenSecret, lc.Env.AccessTokenExpiryHour)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	refreshToken, err := lc.LoginUsecase.CreateRefreshToken(&user, lc.Env.RefreshTokenSecret, lc.Env.RefreshTokenExpiryHour)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
@@ -52,5 +52,7 @@ func (lc *LoginController) Login(c *gin.Context) {
 		RefreshToken: refreshToken,
 	}
 
-	c.JSON(http.StatusOK, loginResponse)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(loginResponse)
 }

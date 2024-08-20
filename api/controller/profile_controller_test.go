@@ -1,25 +1,29 @@
 package controller_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/api/controller"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain/mocks"
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/altafino/ivisual/api/controller"
+	"github.com/altafino/ivisual/domain"
+	"github.com/altafino/ivisual/domain/mocks"
 )
 
-func setUserID(userID string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Set("x-user-id", userID)
-		c.Next()
+func setUserID(userID string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := context.WithValue(r.Context(), "x-user-id", userID)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
 	}
 }
 
@@ -38,7 +42,7 @@ func TestFetch(t *testing.T) {
 
 		mockProfileUsecase.On("GetProfileByID", mock.Anything, userID).Return(mockProfile, nil)
 
-		gin := gin.Default()
+		router := chi.NewRouter()
 
 		rec := httptest.NewRecorder()
 
@@ -46,20 +50,20 @@ func TestFetch(t *testing.T) {
 			ProfileUsecase: mockProfileUsecase,
 		}
 
-		gin.Use(setUserID(userID))
-		gin.GET("/profile", pc.Fetch)
+		router.Use(setUserID(userID))
+		router.Get("/protected/profile", pc.Fetch)
 
 		body, err := json.Marshal(mockProfile)
 		assert.NoError(t, err)
 
 		bodyString := string(body)
 
-		req := httptest.NewRequest(http.MethodGet, "/profile", nil)
-		gin.ServeHTTP(rec, req)
+		req := httptest.NewRequest(http.MethodGet, "/protected/profile", nil)
+		router.ServeHTTP(rec, req)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 
-		assert.Equal(t, bodyString, rec.Body.String())
+		assert.JSONEq(t, bodyString, rec.Body.String())
 
 		mockProfileUsecase.AssertExpectations(t)
 	})
@@ -74,7 +78,7 @@ func TestFetch(t *testing.T) {
 
 		mockProfileUsecase.On("GetProfileByID", mock.Anything, userID).Return(nil, customErr)
 
-		gin := gin.Default()
+		router := chi.NewRouter()
 
 		rec := httptest.NewRecorder()
 
@@ -82,20 +86,20 @@ func TestFetch(t *testing.T) {
 			ProfileUsecase: mockProfileUsecase,
 		}
 
-		gin.Use(setUserID(userID))
-		gin.GET("/profile", pc.Fetch)
+		router.Use(setUserID(userID))
+		router.Get("/protected/profile", pc.Fetch)
 
 		body, err := json.Marshal(domain.ErrorResponse{Message: customErr.Error()})
 		assert.NoError(t, err)
 
 		bodyString := string(body)
 
-		req := httptest.NewRequest(http.MethodGet, "/profile", nil)
-		gin.ServeHTTP(rec, req)
+		req := httptest.NewRequest(http.MethodGet, "/protected/profile", nil)
+		router.ServeHTTP(rec, req)
 
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 
-		assert.Equal(t, bodyString, rec.Body.String())
+		assert.JSONEq(t, bodyString, rec.Body.String())
 
 		mockProfileUsecase.AssertExpectations(t)
 	})

@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	mongo "github.com/amitshekhariitbhu/go-backend-clean-architecture/mongo"
+	mongo "github.com/altafino/ivisual/mongo"
 	mock "github.com/stretchr/testify/mock"
 
 	mongo_drivermongo "go.mongodb.org/mongo-driver/mongo"

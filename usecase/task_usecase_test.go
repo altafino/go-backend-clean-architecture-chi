@@ -6,12 +6,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain/mocks"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/usecase"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/altafino/ivisual/domain"
+	"github.com/altafino/ivisual/domain/mocks"
+	"github.com/altafino/ivisual/usecase"
 )
 
 func TestFetchByUserID(t *testing.T) {

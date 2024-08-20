@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/bootstrap"
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/gin-gonic/gin"
+	"github.com/altafino/ivisual/bootstrap"
+	"github.com/altafino/ivisual/domain"
 )
 
 type RefreshTokenController struct {
@@ -13,36 +13,36 @@ type RefreshTokenController struct {
 	Env                 *bootstrap.Env
 }
 
-func (rtc *RefreshTokenController) RefreshToken(c *gin.Context) {
+func (rtc *RefreshTokenController) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	var request domain.RefreshTokenRequest
 
-	err := c.ShouldBind(&request)
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusBadRequest)
 		return
 	}
 
 	id, err := rtc.RefreshTokenUsecase.ExtractIDFromToken(request.RefreshToken, rtc.Env.RefreshTokenSecret)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "User not found"})
+		http.Error(w, jsonError("User not found"), http.StatusUnauthorized)
 		return
 	}
 
-	user, err := rtc.RefreshTokenUsecase.GetUserByID(c, id)
+	user, err := rtc.RefreshTokenUsecase.GetUserByID(r.Context(), id)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "User not found"})
+		http.Error(w, jsonError("User not found"), http.StatusUnauthorized)
 		return
 	}
 
 	accessToken, err := rtc.RefreshTokenUsecase.CreateAccessToken(&user, rtc.Env.AccessTokenSecret, rtc.Env.AccessTokenExpiryHour)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	refreshToken, err := rtc.RefreshTokenUsecase.CreateRefreshToken(&user, rtc.Env.RefreshTokenSecret, rtc.Env.RefreshTokenExpiryHour)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
@@ -51,5 +51,7 @@ func (rtc *RefreshTokenController) RefreshToken(c *gin.Context) {
 		RefreshToken: refreshToken,
 	}
 
-	c.JSON(http.StatusOK, refreshTokenResponse)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(refreshTokenResponse)
 }

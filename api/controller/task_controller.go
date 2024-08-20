@@ -1,54 +1,59 @@
 package controller
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/amitshekhariitbhu/go-backend-clean-architecture/domain"
-	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/altafino/ivisual/domain"
 )
 
 type TaskController struct {
 	TaskUsecase domain.TaskUsecase
 }
 
-func (tc *TaskController) Create(c *gin.Context) {
+func (tc *TaskController) Create(w http.ResponseWriter, r *http.Request) {
 	var task domain.Task
 
-	err := c.ShouldBind(&task)
+	err := json.NewDecoder(r.Body).Decode(&task)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusBadRequest)
 		return
 	}
 
-	userID := c.GetString("x-user-id")
+	userID := r.Context().Value("x-user-id").(string)
 	task.ID = primitive.NewObjectID()
 
 	task.UserID, err = primitive.ObjectIDFromHex(userID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusBadRequest)
 		return
 	}
 
-	err = tc.TaskUsecase.Create(c, &task)
+	err = tc.TaskUsecase.Create(r.Context(), &task)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	c.JSON(http.StatusOK, domain.SuccessResponse{
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(domain.SuccessResponse{
 		Message: "Task created successfully",
 	})
 }
 
-func (u *TaskController) Fetch(c *gin.Context) {
-	userID := c.GetString("x-user-id")
+func (u *TaskController) Fetch(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value("x-user-id").(string)
 
-	tasks, err := u.TaskUsecase.FetchByUserID(c, userID)
+	tasks, err := u.TaskUsecase.FetchByUserID(r.Context(), userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		http.Error(w, jsonError(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	c.JSON(http.StatusOK, tasks)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
 }
