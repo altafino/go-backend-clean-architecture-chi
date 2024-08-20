@@ -1,5 +1,6 @@
 ## Credits
 This project is a fork of https://github.com/amitshekhariitbhu/go-backend-clean-architecture
+
 What I (https://github.com/stefanwuthrich) have done is:
 - Migrated from Gin to Chi (https://github.com/go-chi/chi). Reason: Chi is more lightweight and based on standard net/http library.
 - Updated Go modules to latest versions.
