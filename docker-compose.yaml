@@ -15,7 +15,7 @@ services:
       - mongodb
 
   mongodb:
-    image: mongo:6
+    image: mongo:7
     container_name: mongodb
     restart: unless-stopped
     env_file: .env
