@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/altafino/ivisual/domain"
-	"github.com/altafino/ivisual/internal/tokenutil"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/internal/tokenutil"
 )
 
 type loginUsecase struct {

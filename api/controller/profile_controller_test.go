@@ -13,9 +13,9 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/altafino/ivisual/api/controller"
-	"github.com/altafino/ivisual/domain"
-	"github.com/altafino/ivisual/domain/mocks"
+	"github.com/altafino/go-backend-clean-architecture-chi/api/controller"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain/mocks"
 )
 
 func setUserID(userID string) func(http.Handler) http.Handler {

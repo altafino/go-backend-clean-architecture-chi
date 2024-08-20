@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/altafino/ivisual/api/route"
-	"github.com/altafino/ivisual/bootstrap"
+	"github.com/altafino/go-backend-clean-architecture-chi/api/route"
+	"github.com/altafino/go-backend-clean-architecture-chi/bootstrap"
 )
 
 func main() {

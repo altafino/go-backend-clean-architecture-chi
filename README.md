@@ -38,7 +38,7 @@ Learn about this project architecture in detail from the blogs mentioned below:
 - Repository
 - Domain
 
-![Go Backend Clean Architecture Diagram](https://github.com/altafino/ivisual/blob/main/assets/go-backend-arch-diagram.png?raw=true)
+![Go Backend Clean Architecture Diagram](https://github.com/altafino/go-backend-clean-architecture-chi/blob/main/assets/go-backend-arch-diagram.png?raw=true)
 
 ### About original author
 
@@ -74,13 +74,13 @@ You can connect with me on:
 
 ### Public API Request Flow without JWT Authentication Middleware
 
-![Public API Request Flow](https://github.com/altafino/ivisual/blob/main/assets/go-arch-public-api-request-flow.png?raw=true)
+![Public API Request Flow](https://github.com/altafino/go-backend-clean-architecture-chi/blob/main/assets/go-arch-public-api-request-flow.png?raw=true)
 
 ### Private API Request Flow with JWT Authentication Middleware
 
 > JWT Authentication Middleware for Access Token Validation.
 
-![Private API Request Flow](https://github.com/altafino/ivisual/blob/main/assets/go-arch-private-api-request-flow.png?raw=true)
+![Private API Request Flow](https://github.com/altafino/go-backend-clean-architecture-chi/blob/main/assets/go-arch-private-api-request-flow.png?raw=true)
 
 ### How to run this project?
 
@@ -93,7 +93,7 @@ We can run this Go Backend Clean Architecture project with or without Docker. He
 cd your-workspace
 
 # Clone this project into your workspace
-git clone https://github.com/altafino/ivisual.git
+git clone https://github.com/altafino/go-backend-clean-architecture-chi.git
 
 # Move to the project root directory
 cd go-backend-clean-architecture

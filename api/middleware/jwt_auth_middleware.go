@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/altafino/ivisual/internal/tokenutil"
+	"github.com/altafino/go-backend-clean-architecture-chi/internal/tokenutil"
 )
 
 func JwtAuthMiddleware(secret string) func(http.Handler) http.Handler {

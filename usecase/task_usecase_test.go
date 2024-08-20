@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/altafino/ivisual/domain"
-	"github.com/altafino/ivisual/domain/mocks"
-	"github.com/altafino/ivisual/usecase"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain/mocks"
+	"github.com/altafino/go-backend-clean-architecture-chi/usecase"
 )
 
 func TestFetchByUserID(t *testing.T) {

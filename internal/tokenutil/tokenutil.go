@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/altafino/ivisual/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
 	jwt "github.com/golang-jwt/jwt/v4"
 )
 

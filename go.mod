@@ -1,4 +1,4 @@
-module github.com/altafino/ivisual
+module github.com/altafino/go-backend-clean-architecture-chi
 
 go 1.23
 

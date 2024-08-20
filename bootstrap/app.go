@@ -1,6 +1,6 @@
 package bootstrap
 
-import "github.com/altafino/ivisual/mongo"
+import "github.com/altafino/go-backend-clean-architecture-chi/mongo"
 
 type Application struct {
 	Env   *Env

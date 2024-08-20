@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/altafino/ivisual/domain"
-	"github.com/altafino/ivisual/mongo"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

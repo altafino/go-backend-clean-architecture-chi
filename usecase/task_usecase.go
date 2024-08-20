@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/altafino/ivisual/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
 )
 
 type taskUsecase struct {

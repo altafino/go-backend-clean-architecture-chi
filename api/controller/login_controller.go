@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/altafino/ivisual/bootstrap"
-	"github.com/altafino/ivisual/domain"
+	"github.com/altafino/go-backend-clean-architecture-chi/bootstrap"
+	"github.com/altafino/go-backend-clean-architecture-chi/domain"
 )
 
 type LoginController struct {

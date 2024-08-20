@@ -5,9 +5,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/altafino/ivisual/api/middleware"
-	"github.com/altafino/ivisual/bootstrap"
-	"github.com/altafino/ivisual/mongo"
+	"github.com/altafino/go-backend-clean-architecture-chi/api/middleware"
+	"github.com/altafino/go-backend-clean-architecture-chi/bootstrap"
+	"github.com/altafino/go-backend-clean-architecture-chi/mongo"
 )
 
 func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, r *chi.Mux) {
