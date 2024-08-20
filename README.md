@@ -204,9 +204,12 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
 
   ```
   curl --location --request POST 'http://localhost:8080/public/signup' \
-  --data-urlencode 'email=test@gmail.com' \
-  --data-urlencode 'password=test' \
-  --data-urlencode 'name=Test Name'
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+    "email": "test@gmail.com",
+    "password": "test",
+    "name": "Test Name"
+    }'
   ```
 
   - Response
@@ -224,8 +227,12 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
 
   ```
   curl --location --request POST 'http://localhost:8080/public/login' \
-  --data-urlencode 'email=test@gmail.com' \
-  --data-urlencode 'password=test'
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+  "email": "test@gmail.com",
+  "password": "test"
+  }'
+
   ```
 
   - Response
@@ -262,8 +269,11 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   ```
   curl --location --request POST 'http://localhost:8080/protected/task' \
   --header 'Authorization: Bearer access_token' \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'title=Test Task'
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+  "title": "Test Task"
+  }'
+
   ```
 
   - Response
@@ -302,8 +312,10 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
 
   ```
   curl --location --request POST 'http://localhost:8080/public/refresh' \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'refreshToken=refresh_token'
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+  "refreshToken": "refresh_token"
+  }'
   ```
 
   - Response
@@ -314,6 +326,7 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
     "refreshToken": "refresh_token"
   }
   ```
+
 
 ### TODO
 
