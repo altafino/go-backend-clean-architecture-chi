@@ -19,5 +19,5 @@ func NewSignupRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Databas
 		SignupUsecase: usecase.NewSignupUsecase(ur, timeout),
 		Env:           env,
 	}
-	router.Post("/signup", sc.Signup)
+	router.Post("/public/signup", sc.Signup)
 }

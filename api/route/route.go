@@ -11,18 +11,17 @@ import (
 )
 
 func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, r *chi.Mux) {
-	// All Public APIs
-	publicRouter := chi.NewRouter()
-	NewSignupRouter(env, timeout, db, publicRouter)
-	NewLoginRouter(env, timeout, db, publicRouter)
-	NewRefreshTokenRouter(env, timeout, db, publicRouter)
-	r.Mount("/public", publicRouter)
+	// Public APIs
+	r.Group(func(r chi.Router) {
+		NewSignupRouter(env, timeout, db, r)
+		NewLoginRouter(env, timeout, db, r)
+		NewRefreshTokenRouter(env, timeout, db, r)
+	})
 
-	// Middleware to verify AccessToken
-	protectedRouter := chi.NewRouter()
-	protectedRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
-	// All Private APIs
-	NewProfileRouter(env, timeout, db, protectedRouter)
-	NewTaskRouter(env, timeout, db, protectedRouter)
-	r.Mount("/protected", protectedRouter)
+	// Protected routes
+	r.Group(func(r chi.Router) {
+		r.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
+		NewTaskRouter(env, timeout, db, r)
+		NewProfileRouter(env, timeout, db, r)
+	})
 }

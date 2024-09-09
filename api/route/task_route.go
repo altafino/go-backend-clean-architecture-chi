@@ -18,6 +18,6 @@ func NewTaskRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database,
 	tc := &controller.TaskController{
 		TaskUsecase: usecase.NewTaskUsecase(tr, timeout),
 	}
-	router.Get("/task", tc.Fetch)
-	router.Post("/task", tc.Create)
+	router.Get("/protected/task", tc.Fetch)
+	router.Post("/protected/task", tc.Create)
 }

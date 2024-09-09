@@ -18,5 +18,5 @@ func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Databa
 	pc := &controller.ProfileController{
 		ProfileUsecase: usecase.NewProfileUsecase(ur, timeout),
 	}
-	router.Get("/profile", pc.Fetch)
+	router.Get("/protected/profile", pc.Fetch)
 }

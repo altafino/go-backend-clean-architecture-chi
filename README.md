@@ -189,12 +189,15 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
 
 ### API Endpoints
 
-- Login
-- Profile
-- Refresh Token
-- Signup
-- Task Create
+- Public Routes (no authentication required):
+  - POST `/public/signup`
+  - POST `/public/login`
+  - POST `/public/refresh`
 
+- Protected Routes (require JWT authentication):
+  - GET `/protected/profile`
+  - POST `/protected/task`
+  - GET `/protected/task`
 
 ### Example API Request and Response
 
@@ -273,7 +276,6 @@ Whenever you make changes in the interfaces of these use-cases, repositories, or
   --data-raw '{
   "title": "Test Task"
   }'
-
   ```
 
   - Response
